@@ -1,0 +1,6 @@
+version: 2
+
+sources:
+  - name: analytics
+    tables:
+      - name: stock_prices
