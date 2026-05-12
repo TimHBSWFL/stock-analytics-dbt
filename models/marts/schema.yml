@@ -1,0 +1,126 @@
+version: 2
+
+models:
+  - name: mart_stock_features
+    description: Table contains stock market feature data, like various returns, trading volume, volatility, breakout candidates, and momentum ranks
+    columns:
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: trade_date
+        description: Date of the trading day
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: volume
+        tests:
+          - not_null
+      - name: prev_close
+        description: previous close price
+      - name: daily_return
+      - name: return_5d
+        description: 5 day rolling returns
+      - name: return_20d
+        description: 20 day rolling returns
+      - name: return_50d
+        description: 50 day rolling returns
+      - name: vol_20d
+        description: 20 day rolling volatility
+      - name: avg_volume_20d
+        description: 20 day average rolling volume
+      - name: high_20d
+        description: 20 day rolling max price
+      - name: pct_of_20d_high
+        description: close price divided by 20 day rolling high price
+      - name: is_volume_spike
+        description: volume is greater than the average 20 day rolling volume
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: is_breakout_candidate
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: momentum_rank
+
+  - name: mart_daily_stock_screener
+    description: Table contains daily stock screener data to identify potential investment opportunities
+    columns:
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: trade_date
+        description: Date of the trading day
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: volume
+        tests:
+          - not_null
+      - name: return_5d
+        description: 5 day rolling returns
+      - name: return_20d
+        description: 20 day rolling returns
+      - name: return_50d
+        description: 50 day rolling returns
+      - name: vol_20d
+        description: 20 day rolling volatility
+      - name: avg_volume_20d
+        description: 20 day average rolling volume
+      - name: pct_of_20d_high
+        description: close price divided by 20 day rolling high price
+      - name: momentum_rank
+      - name: created_at
+        description: timestamp daily stock screener was created on
+        tests:
+          - not_null
+
+  - name: mart_fact_strategy_results
+    description: Table contains data related to simulated trades (5-day trade holding strategy)
+    columns:
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: entry_date
+        description: entry data of stocks on daily screener
+        tests:
+          - not_null
+      - name: exit_date
+        description: exit date of 5-day trade holding strategy
+        tests:
+          - not_null
+      - name: entry_price
+        description: close price of stocks on daily screener
+        tests:
+          - not_null
+      - name: exit_price
+        description: close price of 5-day trade holding strategy
+        tests:
+          - not_null
+      - name: return_pct
+        description: percent return after 5-day holding strategy
+        tests:
+          - not_null
+      - name: holding_days
+        description: equal to the number 5
+        tests:
+          - not_null
+      - name: is_winner
+        description: exit price greater than entry price
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: created_at
+        description: timestamp fact strategy results were created on
+        tests:
+          - not_null
