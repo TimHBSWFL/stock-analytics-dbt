@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: int_daily_metrics
+    description: Daily metrics including daily returns, 10/20/50 day moving averages
+    columns:
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: trade_date
+        description: Date of the trading day
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: daily_return
+      - name: ma_10
+        description: 10 day moving average
+      - name: ma_20
+        description: 20 day moving average
+      - name: ma_50
+        description: 50 day moving average
+    
