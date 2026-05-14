@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
@@ -45,3 +45,9 @@ jobs:
       - name: dbt test
         run: dbt test
         working-directory: .
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::dbt workflow failed — check the steps above for details"
+          echo "Failed step logs are available in the GitHub Actions run summary"
