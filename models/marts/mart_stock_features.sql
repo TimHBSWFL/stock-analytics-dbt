@@ -4,13 +4,7 @@ with source_data as (
     select *
     from {{ ref('stg_stock_prices') }}
 
-    {% if is_incremental() %}
-
-    where trade_date >= (
-        select dateadd(day, -60, max(trade_date))
-        from {{ this }}
-    )
-    {% endif %}
+    {{ incremental_lookback_filter('trade_date', 60) }}
 ),
 
 base as (
@@ -83,12 +77,9 @@ features as (
         ) as momentum_rank
 
     from rolling
+    where return_50d is not null
 )
 
 select *
 from features
-where return_50d is not null
-
-{% if is_incremental() %}
-and trade_date > (select max(trade_date) from {{ this }})
-{% endif %}
+{{ incremental_new_rows_filter('trade_date') }}
