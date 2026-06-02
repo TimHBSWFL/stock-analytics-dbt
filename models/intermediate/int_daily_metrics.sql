@@ -48,7 +48,7 @@ select
     ticker,
     trade_date,
     close,
-    (close - prev_close) / nullif(prev_close, 0) as daily_return,
+    {{ percent_change_calculation('close', 'prev_close') }} as daily_return,
     ma_10,
     ma_20,
     ma_50
