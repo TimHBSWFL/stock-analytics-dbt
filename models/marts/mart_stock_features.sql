@@ -30,7 +30,7 @@ base as (
 
 returns as (
     select *,
-        (close - prev_close) / nullif(prev_close, 0) as daily_return
+        {{ percent_change_calculation('close', 'prev_close') }} as daily_return
     from base
     where prev_close is not null
 ),
