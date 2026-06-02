@@ -12,7 +12,7 @@ screener_entries as (
         ticker,
         trade_date as entry_date,
         close as entry_price
-    from {{ ref('mart_daily_stock_screener') }}
+    from {{ ref('mart_historical_screener') }}
 ),
 
 entry_with_day_num as (
