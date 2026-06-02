@@ -1,4 +1,19 @@
-with base as (
+{{ config(materialized='incremental', unique_key=['ticker', 'trade_date']) }}
+
+with source_data as (
+    select *
+    from {{ ref('stg_stock_prices') }}
+
+    {% if is_incremental() %}
+
+    where trade_date >= (
+        select dateadd(day, -60, max(trade_date))
+        from {{ this }}
+    )
+    {% endif %}
+),
+
+base as (
     select
         ticker,
         trade_date,
@@ -10,7 +25,7 @@ with base as (
             order by trade_date
         ) as prev_close
 
-    from {{ ref('stg_stock_prices')}}
+    from source_data
 ),
 
 returns as (
@@ -73,3 +88,7 @@ features as (
 select *
 from features
 where return_50d is not null
+
+{% if is_incremental() %}
+and trade_date > (select max(trade_date) from {{ this }})
+{% endif %}

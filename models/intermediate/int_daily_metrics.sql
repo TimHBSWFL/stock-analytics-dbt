@@ -1,4 +1,19 @@
-with base as (
+{{ config(materialized='incremental', unique_key=['ticker', 'trade_date']) }}
+
+with source_data as (
+    select *
+    from {{ ref('stg_stock_prices') }}
+
+    {% if is_incremental() %}
+
+    where trade_date >= (
+        select dateadd(day, -60, max(trade_date))
+        from {{ this }}
+    )
+    {% endif %}
+),
+
+base as (
     select
         ticker,
         trade_date,
@@ -26,8 +41,7 @@ with base as (
             rows between 49 preceding and current row
         ) as ma_50
 
-    from {{ ref('stg_stock_prices')}}
-
+    from source_data
 )
 
 select
@@ -39,3 +53,7 @@ select
     ma_20,
     ma_50
 from base
+
+{% if is_incremental() %}
+where trade_date > (select max(trade_date) from {{ this }})
+{% endif %}
