@@ -22,4 +22,21 @@ models:
         description: 20 day moving average
       - name: ma_50
         description: 50 day moving average
+
+unit_tests:
+  - name: test_percent_change_calculation
+    model: int_daily_metrics
+    overrides:
+      macros:
+        is_incremental: false
+    given:
+      - input: ref('stg_stock_prices')
+        rows:
+          - {ticker: 'AAPL', trade_date: '2026-01-01', close: 110, open: 100, high: 115, low: 95, volume: 1000}
+          - {ticker: 'AAPL', trade_date: '2026-01-02', close: 121, open: 110, high: 125, low: 105, volume: 1100}
+    expect:
+      rows:
+        - {ticker: 'AAPL', trade_date: '2026-01-01', daily_return: null}
+        - {ticker: 'AAPL', trade_date: '2026-01-02', daily_return: 0.1}
+   
     
