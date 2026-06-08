@@ -4,3 +4,4 @@ sources:
   - name: analytics
     tables:
       - name: stock_prices
+      - name: dim_ticker

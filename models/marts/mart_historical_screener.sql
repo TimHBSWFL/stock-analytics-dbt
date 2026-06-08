@@ -7,10 +7,29 @@ with base as (
         and is_volume_spike = 1
         and vol_20d < 0.5
         and pct_of_20d_high >= 0.99
+),
+
+sectors as (
+    select *
+    from {{ ref('stg_dim_ticker')}}
+),
+
+merged as (
+    select
+        b.*,
+        s.company_name,
+        s.sector,
+        s.industry
+    from base b
+    left join sectors s on b.ticker = s.ticker
 )
 
 select
     ticker,
+    company_name,
+    sector,
+    industry,
+
     trade_date,
     close,
     volume,
@@ -25,5 +44,5 @@ select
     momentum_rank,
 
     current_timestamp() as created_at
-from base
+from merged
 order by trade_date desc, return_20d desc
