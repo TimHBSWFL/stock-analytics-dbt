@@ -7,9 +7,19 @@ with latest_data as (
     )
 ),
 
-filtered as (
+sectors as (
     select *
-    from latest_data
+    from {{ ref('stg_dim_ticker')}}
+),
+
+filtered as (
+    select
+        l.*,
+        s.company_name,
+        s.sector,
+        s.industry
+    from latest_data l
+    left join sectors s on l.ticker = s.ticker
     where
         is_breakout_candidate = 1
         and return_20d > 0.05
@@ -20,6 +30,10 @@ filtered as (
 
 select
     ticker,
+    company_name,
+    sector,
+    industry,
+
     trade_date,
     close,
     volume,
