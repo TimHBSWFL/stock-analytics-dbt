@@ -41,6 +41,7 @@ trades as (
 )
 
 select
+    {{ dbt_utils.generate_surrogate_key(['ticker', 'entry_date']) }} as trade_id,
     ticker,
     entry_date,
     exit_date,
