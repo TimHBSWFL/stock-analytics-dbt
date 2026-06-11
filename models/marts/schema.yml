@@ -86,6 +86,11 @@ models:
   - name: mart_fact_strategy_results
     description: Table contains data related to simulated trades (5-day trade holding strategy)
     columns:
+      - name: trade_id
+        description: Surrogate key hashed from ticker and entry_date
+        tests:
+          - not_null
+          - unique
       - name: ticker
         description: Stock ticker symbol
         tests:
