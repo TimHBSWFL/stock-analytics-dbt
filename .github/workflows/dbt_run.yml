@@ -38,6 +38,10 @@ jobs:
                 threads: 4
           EOF
 
+      - name: dbt deps
+        run: dbt deps
+        working-directory: .
+
       - name: dbt run
         run: dbt run
         working-directory: .
