@@ -129,3 +129,28 @@ models:
         description: timestamp fact strategy results were created on
         tests:
           - not_null
+
+  - name: dim_trading_calendar
+    description: Calendar table generated via date_spine covering all dates from 2025-01-01 to today, with flags for weekends and actual trading days
+    columns: 
+      - name: date_day
+        description: Calendar date
+        tests:
+          - not_null
+          - unique
+      - name: day_of_week
+        description: Full day name (e.g. Monday, Saturday)
+        tests:
+          - not_null
+      - name: is_weekend
+        description: 1 if Saturday or Sunday, else 0
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: is_trading_day
+        description: 1 if date has stock price data in stg_stock_prices, else 0
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
