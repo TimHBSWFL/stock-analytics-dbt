@@ -2,6 +2,13 @@ version: 2
 
 sources:
   - name: analytics
+    config:
+      freshness:
+        warn_after: {count: 1, period: day}
+        error_after: {count: 3, period: day}
+      loaded_at_field: run_ts
     tables:
       - name: stock_prices
       - name: dim_ticker
+        config:
+          freshness: null  # dim_ticker updates rarely, skip freshness check
