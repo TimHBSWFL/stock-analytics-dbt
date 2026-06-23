@@ -26,9 +26,9 @@ jobs:
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
           stock_analytics_project:
-            target: dev
+            target: prod
             outputs:
-              dev:
+              prod:
                 type: databricks
                 host: ${{ secrets.DATABRICKS_HOST }}
                 http_path: ${{ secrets.DATABRICKS_HTTP_PATH }}
@@ -43,15 +43,15 @@ jobs:
         working-directory: .
 
       - name: dbt source freshness
-        run: dbt source freshness
+        run: dbt source freshness --target prod
         working-directory: .
 
       - name: dbt run
-        run: dbt run
+        run: dbt run --target prod
         working-directory: .
 
       - name: dbt test
-        run: dbt test
+        run: dbt test --target prod
         working-directory: .
 
       - name: Notify on failure
