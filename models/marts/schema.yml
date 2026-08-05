@@ -132,7 +132,7 @@ models:
 
   - name: dim_trading_calendar
     description: Calendar table generated via date_spine covering all dates from 2025-01-01 to today, with flags for weekends and actual trading days
-    columns: 
+    columns:
       - name: date_day
         description: Calendar date
         tests:
@@ -206,6 +206,72 @@ models:
           - not_null
       - name: entry_date
         description: Date of the golden cross signal (trade entry)
+        tests:
+          - not_null
+      - name: exit_date
+        description: Exit date after 10-day holding period
+        tests:
+          - not_null
+      - name: entry_price
+        description: Close price on entry date
+        tests:
+          - not_null
+      - name: exit_price
+        description: Close price on exit date
+        tests:
+          - not_null
+      - name: return_pct
+        description: Percent return after 10-day holding period
+        tests:
+          - not_null
+      - name: holding_days
+        description: Equal to the number 10
+        tests:
+          - not_null
+      - name: is_winner
+        description: 1 if exit price greater than entry price, else 0
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: created_at
+        description: Timestamp the record was created
+        tests:
+          - not_null
+
+  - name: mart_rsi_signals
+    description: Dates where a ticker's 14-period RSI dropped below 30, indicating an oversold condition and potential mean-reversion buy signal
+    columns:
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: trade_date
+        description: Date the oversold signal occurred
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: rsi_14
+        description: 14-period RSI value at time of signal; always less than 30 in this model
+        tests:
+          - not_null
+
+  - name: mart_fact_rsi_results
+    description: Simulated trades entering on RSI oversold signals (RSI < 30) and holding for 10 trading days
+    columns:
+      - name: trade_id
+        description: Surrogate key hashed from ticker and entry_date
+        tests:
+          - not_null
+          - unique
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: entry_date
+        description: Date of the RSI oversold signal (trade entry)
         tests:
           - not_null
       - name: exit_date
