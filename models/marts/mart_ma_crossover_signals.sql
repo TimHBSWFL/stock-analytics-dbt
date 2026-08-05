@@ -2,7 +2,7 @@
 
 with source_data as (
     select *
-    from {{ ref('int_daily_metrics')}}
+    from {{ ref('int_daily_metrics') }}
 ),
 
 base as (
