@@ -154,3 +154,87 @@ models:
           - accepted_values:
               arguments:
                 values: [0, 1]
+
+  - name: mart_historical_screener
+    description: All historical dates where a ticker met breakout candidate criteria (is_breakout_candidate=1, return_20d>5%, volume spike, low volatility, near 20d high)
+    columns:
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: trade_date
+        description: Date of the trading day
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: volume
+        tests:
+          - not_null
+
+  - name: mart_ma_crossover_signals
+    description: Golden cross events where MA10 crosses above MA50, indicating a potential bullish trend reversal
+    columns:
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: trade_date
+        description: Date the golden cross occurred
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: ma_spread
+        description: Percentage spread between MA10 and MA50 at the time of the crossover
+        tests:
+          - not_null
+
+  - name: mart_fact_ma_crossover_results
+    description: Simulated trades entering on golden cross signals and holding for 10 trading days
+    columns:
+      - name: trade_id
+        description: Surrogate key hashed from ticker and entry_date
+        tests:
+          - not_null
+          - unique
+      - name: ticker
+        description: Stock ticker symbol
+        tests:
+          - not_null
+      - name: entry_date
+        description: Date of the golden cross signal (trade entry)
+        tests:
+          - not_null
+      - name: exit_date
+        description: Exit date after 10-day holding period
+        tests:
+          - not_null
+      - name: entry_price
+        description: Close price on entry date
+        tests:
+          - not_null
+      - name: exit_price
+        description: Close price on exit date
+        tests:
+          - not_null
+      - name: return_pct
+        description: Percent return after 10-day holding period
+        tests:
+          - not_null
+      - name: holding_days
+        description: Equal to the number 10
+        tests:
+          - not_null
+      - name: is_winner
+        description: 1 if exit price greater than entry price, else 0
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: created_at
+        description: Timestamp the record was created
+        tests:
+          - not_null
