@@ -12,3 +12,6 @@ sources:
       - name: dim_ticker
         config:
           freshness: null  # dim_ticker updates rarely, skip freshness check
+      - name: macd_signals
+        config:
+          freshness: null  # computed on-demand by compute_macd.py, not a daily feed
