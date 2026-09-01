@@ -83,8 +83,8 @@ models:
         tests:
           - not_null
 
-  - name: mart_fact_strategy_results
-    description: Table contains data related to simulated trades (5-day trade holding strategy)
+  - name: mart_fact_5_day_momentum_results
+    description: Simulated trades entering on 5-day momentum breakout signals and holding for 5 trading days
     columns:
       - name: trade_id
         description: Surrogate key hashed from ticker and entry_date
