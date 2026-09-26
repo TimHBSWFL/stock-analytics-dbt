@@ -5,7 +5,10 @@ sources:
     config:
       freshness:
         warn_after: {count: 1, period: day}
-        error_after: {count: 3, period: day}
+        # A single missed daily load already reads as ~34h, since the ETL and
+        # dbt schedules sit ~11h apart. 2 days flags a real stall one run sooner
+        # than 3 without tripping on one late run.
+        error_after: {count: 2, period: day}
       loaded_at_field: run_ts
     tables:
       - name: stock_prices
