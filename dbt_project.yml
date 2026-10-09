@@ -23,6 +23,12 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_packages"
 
 
+# WBD was cash-merged into Skydance and delisted on 2026-10-06, taking the
+# watchlist from 40 names to 39. assert_full_ticker_coverage reads this.
+vars:
+  expected_ticker_count: 39
+
+
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
